@@ -49,5 +49,7 @@ rake db:migrate  # dbに反映
 
 ```sh:
 rails _4.0.0_ new taskapp
+rails g model Project title:string   # modelは単数頭大文字、stringはdefaultなので省略可
+rake db:migrate  # dbに反映
 ```
 
