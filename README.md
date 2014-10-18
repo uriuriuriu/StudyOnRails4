@@ -3,6 +3,7 @@ StudyOnRails4
 
 #ドットインストール見ながらRuby on Rails 4入門
 
+[ドットインストール Ruby on Rails 4入門 (全28回)](http://dotinstall.com/lessons/basic_rails_v2)
 
 ##1~3
 ### 環境設定
