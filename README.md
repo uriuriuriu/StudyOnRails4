@@ -53,3 +53,34 @@ rails g model Project title:string   # modelは単数頭大文字、stringはdef
 rake db:migrate  # dbに反映
 ```
 
+##6
+
+db
+
+```sh:
+rails db  # db内確認
+sqlite>
+.schema   # 5でmigrateしたschemaを確認
+.exit     # 終了
+```
+
+console
+
+```sh:
+rails console # コンソール開始
+irb(main):001:0>
+p = Project.new(title:"p1") # 作成
+p.save                      # 保存
+p                           # 確認
+Project.create(title:"p2")  # 作成 & 保存
+Project.all                 # 全部確認
+quit          # コンソール終了
+```
+
+dbにて作成確認
+
+```sh:
+rails db  # db内確認
+select * from projects; 確認
+```
+
