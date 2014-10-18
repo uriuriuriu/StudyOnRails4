@@ -45,3 +45,9 @@ rake db:migrate  # dbに反映
 [http://0.0.0.0:3000/users](http://0.0.0.0:3000/users)
 
 
+##5
+
+```sh:
+rails _4.0.0_ new taskapp
+```
+
