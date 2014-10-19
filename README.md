@@ -84,3 +84,12 @@ rails db  # db内確認
 select * from projects; 確認
 ```
 
+
+##7
+
+controllerの作成
+
+```sh:
+rails g controller Projects   # Projectsとsが付き複数形になっている
+```
+
