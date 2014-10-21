@@ -129,3 +129,6 @@ new file:   taskapp/app/views/projects/index.html.erb
 <% end %>
 </ul>
 ```
+
+作成画面
+[http://0.0.0.0:3000/projects](http://0.0.0.0:3000/projects)
