@@ -132,3 +132,15 @@ new file:   taskapp/app/views/projects/index.html.erb
 
 作成画面
 [http://0.0.0.0:3000/projects](http://0.0.0.0:3000/projects)
+
+##9
+projectsページをrootページに設定  
+modified:   taskapp/config/routes.rb  
+下記追記。  
+
+```ruby:routes.rb
+  root 'projects#index'
+```
+
+作成画面
+[http://0.0.0.0:3000](http://0.0.0.0:3000)
