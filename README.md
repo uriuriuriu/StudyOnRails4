@@ -91,5 +91,17 @@ controllerの作成
 
 ```sh:
 rails g controller Projects   # Projectsとsが付き複数形になっている
+# config/routes.rb に下記記入。(projectsページのURI表示設定)
+   resources :projects
+rake routes   # ルーティングの確認(超大事！！！！！！！！！！！！！)
+>      Prefix Verb   URI Pattern                  Controller#Action
+>    projects GET    /projects(.:format)          projects#index
+>             POST   /projects(.:format)          projects#create	# project_controller.rbのcreateに書けよって意味。
+> new_project GET    /projects/new(.:format)      projects#new
+>edit_project GET    /projects/:id/edit(.:format) projects#edit
+>     project GET    /projects/:id(.:format)      projects#show
+>             PATCH  /projects/:id(.:format)      projects#update
+>             PUT    /projects/:id(.:format)      projects#update
+>             DELETE /projects/:id(.:format)      projects#destroy
 ```
 
