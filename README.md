@@ -110,7 +110,7 @@ routesに表示されていたprojects#indexの作成
 controllerにindexを作成。  
 modified:   taskapp/app/controllers/projects_controller.rb
 
-```ruby:
+```ruby:projects_controller.rb
 class ProjectsController < ApplicationController
 	def index
 		@projects = Project.all
@@ -121,7 +121,7 @@ end
 viewファイルを同じ位置に同じindexという名前で作成。  
 new file:   taskapp/app/views/projects/index.html.erb
 
-```erb:
+```erb:index.html.erb
 <h1>Projects</h1>
 <ul>
 <% @projects.each do |project| %>
