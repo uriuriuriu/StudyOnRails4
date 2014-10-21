@@ -105,3 +105,27 @@ rake routes   # ルーティングの確認(超大事！！！！！！！！！
 >             DELETE /projects/:id(.:format)      projects#destroy
 ```
 
+##8
+routesに表示されていたprojects#indexの作成  
+controllerにindexを作成。  
+modified:   taskapp/app/controllers/projects_controller.rb
+
+```ruby:
+class ProjectsController < ApplicationController
+	def index
+		@projects = Project.all
+	end
+end
+```
+
+viewファイルを同じ位置に同じindexという名前で作成。  
+new file:   taskapp/app/views/projects/index.html.erb
+
+```erb:
+<h1>Projects</h1>
+<ul>
+<% @projects.each do |project| %>
+	<li><%= project.title %></li>
+<% end %>
+</ul>
+```
