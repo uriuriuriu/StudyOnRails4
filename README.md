@@ -144,3 +144,38 @@ modified:   taskapp/config/routes.rb
 
 作成画面
 [http://0.0.0.0:3000](http://0.0.0.0:3000)
+
+##10
+共有テンプレートの編集  
+modified:   taskapp/app/views/layouts/application.html.erb
+<%= yield %>周りに下記追記。  
+
+```ruby:application.html.erb
+<%= image_tag "logo.png" %>
+
+<%= yield %>
+
+<%= link_to "Home", "/" %>
+<%= link_to "Projects", projects_path %>
+```
+
+app/assets/images/logo.png画像の表示  
+rootページリンクのHome文字  
+projectsページリンクのProjects文字  
+
+```sh:
+rake routes
+>      Prefix Verb   URI Pattern                  Controller#Action
+>    projects GET    /projects(.:format)          projects#index
+>             POST   /projects(.:format)          projects#create
+> new_project GET    /projects/new(.:format)      projects#new
+>edit_project GET    /projects/:id/edit(.:format) projects#edit
+>     project GET    /projects/:id(.:format)      projects#show
+>             PATCH  /projects/:id(.:format)      projects#update
+>             PUT    /projects/:id(.:format)      projects#update
+>             DELETE /projects/:id(.:format)      projects#destroy
+```
+
+リンクパスは上記rake routesにて表示されるPrefixに_pathとしてつなげればなる。  
+作成画面
+[http://0.0.0.0:3000](http://0.0.0.0:3000)
