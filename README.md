@@ -223,3 +223,52 @@ projectのtitleのみ表示します。
 ```erb:show.html.erb
 <h1><%= @project.title %></h1>
 ```
+
+
+##12 新規作成フォームを作ろう
+
+projects#newの値をPOSTでprojects#createが受け取る手順になります。
+まずはindexにnewページへのリンク作成とnewページにform作成をします。
+
+```sh:
+rake routes
+...
+>             POST   /projects(.:format)          projects#create
+> new_project GET    /projects/new(.:format)      projects#new
+...
+```
+
+indexにnewページへのリンク作成。
+
+```erb:index.html.erb
+<p><%= link_to "add New", new_project_path %></p>
+```
+
+
+```ruby:projects_controller.rb
+class ProjectsController < ApplicationController
+	def index
+		@projects = Project.all
+	end
+
+	def new
+		@project = Project.new
+	end
+end
+```
+
+```erb:new.html.erb
+<h1>Add New</h1>
+
+<%= form_for @project do |f| %>
+
+	<p>
+		<%= f.label :title %><br>
+		<%= f.text_field :title %>
+	</p>
+
+	<p>
+		<%= f.submit %>
+	</p>
+<% end %>
+```
