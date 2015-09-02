@@ -292,3 +292,32 @@ privateに記述たように、セキュリティ的にparamsをpermitで制限�
 		end
 end
 ```
+
+##14 Validationを設定しよう
+
+ModelにValidationを設定し、適切なデータが保存されるようにします。  
+
+```ruby:models/project.rb
+class Project < ActiveRecord::Base
+	validates :title, presence: true
+end
+```
+models/project.rb に上記を記述します。  
+presence: trueにすることで空の値を許可しなくなります。  
+この状態で登録ボタンを押すと登録はされないようになりますが、一覧画面に戻ってしまいます。  
+ですのでcontrollerのcreateを修正していきます。
+
+```ruby:projects_controller.rb
+...
+	def create
+		@project = Project.new(project_params)
+		if @project.save
+			redirect_to projects_path
+		else
+			render "new"
+		end
+	end
+```
+
+@project.saveは成否をbooleanで返すので、  
+falseの場合は現在のページを戻す挙動に変更します。
