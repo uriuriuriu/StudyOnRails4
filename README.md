@@ -272,3 +272,23 @@ end
 	</p>
 <% end %>
 ```
+
+##13 データを保存してみよう
+
+create部分を実装しデータを保存します。
+privateに記述たように、セキュリティ的にparamsをpermitで制限するのが最近の作り方になります。
+
+```ruby:projects_controller.rb
+...
+	def create
+		@project = Project.new(project_params)
+		@project.save
+		redirect_to projects_path
+	end
+
+	private
+		def project_params
+			params[:project].permit(:title)
+		end
+end
+```
