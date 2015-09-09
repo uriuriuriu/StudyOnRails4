@@ -302,6 +302,7 @@ class Project < ActiveRecord::Base
 	validates :title, presence: true
 end
 ```
+
 models/project.rb に上記を記述します。  
 presence: trueにすることで空の値を許可しなくなります。  
 この状態で登録ボタンを押すと登録はされないようになりますが、一覧画面に戻ってしまいます。  
@@ -321,3 +322,51 @@ presence: trueにすることで空の値を許可しなくなります。
 
 @project.saveは成否をbooleanで返すので、  
 falseの場合は現在のページを戻す挙動に変更します。
+
+
+##15 エラーメッセージを表示しよう
+
+引き続きerror messageを表示してみましょう。
+
+```erb:new.html.erb
+...
+	<p>
+		<%= f.label :title %><br>
+		<%= f.text_field :title %>
+		<% if @project.errors.any? %>
+		<%#= @project.errors.inspect %>
+		<%= @project.errors.messages[:title][0] %>
+		<% end %>
+	</p>
+...
+```
+
+new.html.erb  
+@project.errors.inspectによりerrorsの中身が確認できるので、  
+@project.errors.messages[:title][0] を入力すべき事が確認できるはずです。  
+
+```
+can't be blank
+```
+
+このメッセージを変更するには
+
+
+```ruby:models/project.rb
+class Project < ActiveRecord::Base
+#	validates :title, presence: true
+	validates :title, presence: {message: "入力してください"}
+
+end
+```
+
+上記のように編集しましょう。  
+入力文字数のチェックも下記のようにすれば対応できます。
+
+```ruby:models/project.rb
+class Project < ActiveRecord::Base
+	validates :title,
+	presence: {message: "入力してください"},
+	length: {minimum: 3, message: "短すぎ！"}
+end
+```
