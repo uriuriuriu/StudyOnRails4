@@ -370,3 +370,50 @@ class Project < ActiveRecord::Base
 	length: {minimum: 3, message: "短すぎ！"}
 end
 ```
+
+
+##16 編集フォームを作ろう
+
+編集フォームするために編集する場所はroutingで確認できます。
+下記の#edit1つと#update2つになります。
+
+```sh:
+rake routes
+...
+>edit_project GET    /projects/:id/edit(.:format) projects#edit
+>     project GET    /projects/:id(.:format)      projects#show
+>             PATCH  /projects/:id(.:format)      projects#update
+>             PUT    /projects/:id(.:format)      projects#update
+...
+```
+
+まずは[edit]リンクを作成していきましょう。
+
+```erb:index.html.erb
+<h1>Projects</h1>
+<ul>
+<% @projects.each do |project| %>
+	<li>
+		<%= link_to project.title, project_path(project.id) %>
+		<%= link_to "[edit]", edit_project_path(project.id) %>
+	</li>
+<% end %>
+</ul>
+
+<p><%= link_to "Add New", new_project_path %></p>
+```
+
+[edit]の1行を追加しました。  
+  
+次に編集ページを作成していきましょう。  
+controllerにメソッドの追加と、edit.html.erbの作成です。
+
+```ruby:projects_controller.rb
+...
+	def edit
+		@project = Project.find(params[:id])
+	end
+...
+```
+
+edit.html.erbはnew.html.erbをコピーしましょう。titleの編集のみで大丈夫です。
