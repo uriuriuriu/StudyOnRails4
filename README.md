@@ -468,3 +468,34 @@ newとedit.html.erbは上記の様にすっきりされ、
 ```
 
 これで共通化は完了です。
+
+
+##18 データを削除しよう
+
+続いて削除にとりかかりましょう。  
+同じようにindex.htmlにリンクの作成と  
+controllerにメソッドの追加、  
+
+```erb:index.html.erb
+...
+		<%= link_to project.title, project_path(project.id) %>
+		<%= link_to "[edit]", edit_project_path(project.id) %>
+		<%= link_to "[delete]", project_path(project.id), method: :delete, data: {confirm:"消していいん？"} %>
+...
+```
+
+下に作成したリンク部分になります。  
+confirmでalert確認が入ります。
+
+```ruby:projects_controller.rb
+...
+	def destroy
+		@project = Project.find(params[:id])
+		@project.destroy
+		redirect_to projects_path
+	end
+...
+```
+
+これでdestroy処理が完了になります。
+
