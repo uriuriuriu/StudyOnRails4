@@ -416,4 +416,5 @@ controllerにメソッドの追加と、edit.html.erbの作成です。
 ...
 ```
 
-edit.html.erbはnew.html.erbをコピーしましょう。titleの編集のみで大丈夫です。
+edit.html.erbはnew.html.erbをコピーしましょう。titleの編集のみで大丈夫で問題なく表示されるはずです。  
+また、下部のボタン文字も自動的にupdateに変更されているはずです。
