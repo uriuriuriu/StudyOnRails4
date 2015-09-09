@@ -418,3 +418,53 @@ controllerにメソッドの追加と、edit.html.erbの作成です。
 
 edit.html.erbはnew.html.erbをコピーしましょう。titleの編集のみで大丈夫で問題なく表示されるはずです。  
 また、下部のボタン文字も自動的にupdateに変更されているはずです。
+
+
+##17 データを更新しよう
+
+ではupdateの処理を追加していきましょう。  
+controllerにメソッド追加になります。
+
+
+```ruby:projects_controller.rb
+...
+	def update
+		@project = Project.find(params[:id])
+		if @project.update(project_params)
+			redirect_to projects_path
+		else
+			render "edit"
+		end
+	end
+...
+```
+
+メソット内容は上記で完了になります。  
+うまくいきますが、newとeditの際のフォームhtml部分が同じことに気づくはずです。  
+そうゆうところは共通化していきましょう。
+
+```erb:edit.html.erb
+<h1>Edit</h1>
+
+<%= render "form" %>
+
+```
+
+newとedit.html.erbは上記の様にすっきりされ、  
+下記の_form.html.erbに共通部分を記述します。
+
+
+```erb:_form.html.erb
+...
+	def update
+		@project = Project.find(params[:id])
+		if @project.update(project_params)
+			redirect_to projects_path
+		else
+			render "edit"
+		end
+	end
+...
+```
+
+これで共通化は完了です。
