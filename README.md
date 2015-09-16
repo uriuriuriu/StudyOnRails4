@@ -20,14 +20,14 @@ ruby&railsのバージョンの組み合わせをプロジェクトごとに変�
 
 ```sh:
 # 作成
-rbenv install 2.0.0-p247    # rubyインストール
-rbenv local 2.0.0-p247      # このディレクトリのみ2.0.0-p247で動作させる
-ruby --version              # 確認
-gem install rails --version "=4.0.0"  # railsインストール
-rails _4.0.0_ new myapp     # rails4.0.0にてプロジェクト作成
+% rbenv install 2.0.0-p247    # rubyインストール
+% rbenv local 2.0.0-p247      # このディレクトリのみ2.0.0-p247で動作させる
+% ruby --version              # 確認
+% gem install rails --version "=4.0.0"  # railsインストール
+% rails _4.0.0_ new myapp     # rails4.0.0にてプロジェクト作成
 # 起動
-cd myapp
-rails s
+% cd myapp
+% rails s
 ```
 
 作成画面  
@@ -37,8 +37,8 @@ rails s
 ##4
 
 ```sh:
-rails generate scaffold User name:string score:integer  # db設定作成
-rake db:migrate  # dbに反映
+% rails generate scaffold User name:string score:integer  # db設定作成
+% rake db:migrate  # dbに反映
 ```
 
 作成画面  
@@ -48,9 +48,9 @@ rake db:migrate  # dbに反映
 ##5
 
 ```sh:
-rails _4.0.0_ new taskapp
-rails g model Project title:string   # modelは単数頭大文字、stringはdefaultなので省略可
-rake db:migrate  # dbに反映
+% rails _4.0.0_ new taskapp
+% rails g model Project title:string   # modelは単数頭大文字、stringはdefaultなので省略可
+% rake db:migrate  # dbに反映
 ```
 
 ##6
@@ -58,7 +58,7 @@ rake db:migrate  # dbに反映
 db
 
 ```sh:
-rails db  # db内確認
+% rails db  # db内確認
 sqlite>
 .schema   # 5でmigrateしたschemaを確認
 .exit     # 終了
@@ -67,7 +67,7 @@ sqlite>
 console
 
 ```sh:
-rails console # コンソール開始
+% rails console # コンソール開始
 irb(main):001:0>
 p = Project.new(title:"p1") # 作成
 p.save                      # 保存
@@ -80,7 +80,7 @@ quit          # コンソール終了
 dbにて作成確認
 
 ```sh:
-rails db  # db内確認
+% rails db  # db内確認
 select * from projects; 確認
 ```
 
@@ -90,7 +90,7 @@ select * from projects; 確認
 controllerの作成
 
 ```sh:
-rails g controller Projects   # Projectsとsが付き複数形になっている
+% rails g controller Projects   # Projectsとsが付き複数形になっている
 # config/routes.rb に下記記入。(projectsページのURI表示設定)
    resources :projects
 rake routes   # ルーティングの確認(超大事！！！！！！！！！！！！！)
@@ -164,7 +164,7 @@ rootページリンクのHome文字
 projectsページリンクのProjects文字  
 
 ```sh:
-rake routes
+% rake routes
 >      Prefix Verb   URI Pattern                  Controller#Action
 >    projects GET    /projects(.:format)          projects#index
 >             POST   /projects(.:format)          projects#create
@@ -196,7 +196,7 @@ project一覧から個別ページへのリンクを設定しましょう。
 project_pathはroutesにあるように、引数にidを待ちます。
 
 ```sh:
-rake routes
+% rake routes
 ...
 >     project GET    /projects/:id(.:format)      projects#show
 ...
@@ -231,7 +231,7 @@ projects#newの値をPOSTでprojects#createが受け取る手順になります�
 まずはindexにnewページへのリンク作成とnewページにform作成をします。  
 
 ```sh:
-rake routes
+% rake routes
 ...
 >             POST   /projects(.:format)          projects#create
 > new_project GET    /projects/new(.:format)      projects#new
@@ -378,7 +378,7 @@ end
 下記の#edit1つと#update2つになります。
 
 ```sh:
-rake routes
+% rake routes
 ...
 >edit_project GET    /projects/:id/edit(.:format) projects#edit
 >     project GET    /projects/:id(.:format)      projects#show
@@ -520,3 +520,80 @@ class ProjectsController < ApplicationController
 
 のように記述すると、:show, :edit, :update, :destroy]内にある  
 @project = Project.find(params[:id]) の記述を削除できます。
+
+
+##20 Tasksの設定をしていこう
+
+projectが出来てきたので、その中身にTaskを表示していきましょう。
+手順としては今までどおり  
+ 1. modelの作成  
+ 2. dbのmigrate  
+ 3. controllerの作成  
+ 4. routingの設定  
+となります。  
+ではまずmodelを用意します。
+
+```sh:
+# string型のtitleは型宣言の省略が出来ます。
+# 他テーブルへの参照は
+#   project:references
+# のように Table名:references で出来ます。
+% rails g model Task title done:boolean project:references
+      invoke  active_record
+      create    db/migrate/20150916133801_create_tasks.rb
+      create    app/models/task.rb
+      invoke    test_unit
+      create      test/models/task_test.rb
+      create      test/fixtures/tasks.yml
+```
+
+dbのmigrateをする前に、  
+db/migrate/20150916133801_create_tasks.rbで作成されたmigrateファイルを少し修正しておきます。
+
+```ruby:db/migrate/20150916133801_create_tasks.rb
+class CreateTasks < ActiveRecord::Migration
+  def change
+    create_table :tasks do |t|
+      t.string :title
+#      t.boolean :done
+      t.boolean :done, default:false
+      t.references :project, index: true
+
+      t.timestamps
+    end
+  end
+end
+```
+
+編集が済んだらdbのmigrateをしていきます。
+
+```sh:
+% rake db:migrate
+==  CreateTasks: migrating ====================================================
+-- create_table(:tasks)
+   -> 0.0082s
+==  CreateTasks: migrated (0.0083s) ===========================================
+```
+
+続いてcontrollerの作成です。
+
+```sh:
+% rails g controller Tasks
+      create  app/controllers/tasks_controller.rb
+      invoke  erb
+      create    app/views/tasks
+      invoke  test_unit
+      create    test/controllers/tasks_controller_test.rb
+      invoke  helper
+      create    app/helpers/tasks_helper.rb
+      invoke    test_unit
+      create      test/helpers/tasks_helper_test.rb
+      invoke  assets
+      invoke    coffee
+      create      app/assets/javascripts/tasks.js.coffee
+      invoke    scss
+      create      app/assets/stylesheets/tasks.css.scss
+```
+
+上記のように作成されたはずです。  
+routingは長くなりそうなので次回になります。
