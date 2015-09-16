@@ -499,3 +499,24 @@ confirmでalert確認が入ります。
 
 これでdestroy処理が完了になります。
 
+
+##19 before_actionを使ってみよう
+
+controller部分に重複した記述があるので共通化していきましょう。  
+
+```ruby:projects_controller.rb
+class ProjectsController < ApplicationController
+
+	before_action :set_project, only: [:show, :edit, :update, :destroy]
+
+	def index
+	...
+	...
+		def set_project
+			@project = Project.find(params[:id])
+		end
+	...
+```
+
+のように記述すると、:show, :edit, :update, :destroy]内にある  
+@project = Project.find(params[:id]) の記述を削除できます。
