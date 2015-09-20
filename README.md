@@ -597,3 +597,59 @@ end
 
 上記のように作成されたはずです。  
 routingは長くなりそうなので次回になります。
+
+
+##21 Associationの設定をしよう
+
+modelの関連付けを忘れていたので設定していきます。  
+Taskに関しては  
+% rails g model Task title done:boolean project:references  
+のコマンドでapp/models/task.rubyにbelogn_toが記述されます。  
+
+```ruby:app/models/task.ruby
+class Task < ActiveRecord::Base
+  belongs_to :project
+end
+```
+
+しかし、app/models/project.rubyには関連付けがされていなので記述します。
+
+```ruby:app/models/project.ruby
+class Project < ActiveRecord::Base
+	has_many :tasks,
+	validates :title,
+	presence: {message: "入力してください"},
+	length: {minimum: 3, message: "短すぎ！"}
+end
+```
+
+続いてroutingです。
+
+```ruby:config/routes.ruby
+...
+#  resources :projects
+  resources :projects do
+    resources :tasks, only: [:create, :destroy]
+  end
+...
+```
+
+実際に必要となるroutingは作成&削除時のみなのでonlyで記述しておきます。  
+rake routesで確認してみましょう。
+
+```sh:
+% rake routes                                                        
+       Prefix Verb   URI Pattern                               Controller#Action
+project_tasks POST   /projects/:project_id/tasks(.:format)     tasks#create
+ project_task DELETE /projects/:project_id/tasks/:id(.:format) tasks#destroy
+     projects GET    /projects(.:format)                       projects#index
+              POST   /projects(.:format)                       projects#create
+  new_project GET    /projects/new(.:format)                   projects#new
+ edit_project GET    /projects/:id/edit(.:format)              projects#edit
+      project GET    /projects/:id(.:format)                   projects#show
+              PATCH  /projects/:id(.:format)                   projects#update
+              PUT    /projects/:id(.:format)                   projects#update
+              DELETE /projects/:id(.:format)                   projects#destroy
+         root GET    /                                         projects#index
+```
+project_tasksのcreateとdestroyの2行が追加されているはずです。
