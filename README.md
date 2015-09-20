@@ -750,7 +750,7 @@ redirectのproject_pathはコピーしたままだとprojects_pathになって�
 
 task管理なので各タスクにcheckboxを用意しましょう。
 
-```ruby:views/projects/show.html.erb
+```erb:views/projects/show.html.erb
 ...
 		<%= check_box_tag "", "", task.done, {"data-id" => task.id, "data-project-id" => task.project_id}%>
 ...
@@ -763,4 +763,66 @@ $(function(){
 </script>
 ```
 
-jsでajax通信をする予定です。
+jsでajax通信を実装予定です。
+
+
+##26 toggleアクションを作ろう
+
+jsにdata属性を記述していきます。
+
+```erb:views/projects/show.html.erb
+...
+<script>
+$(function(){
+	$("input[type=checkbox]").click(function(){
+		$.post("/projects/"+$(this).data("project_id")+"/tasks/"+$(this).data("id")+"/toggle");
+	});
+})
+</script>
+```
+
+次はroutesにtoggle処理が定義されてないので。記述しましょう。  
+routes.rbにあるサンプルのように記述していきます。  
+
+
+```ruby:routes.rb
+...
+  post 'projects/:project_id/tasks/:id/toggle' => 'tasks#toggle'
+...
+  # Example of regular route:
+  #   get 'products/:id' => 'catalog#view'
+...
+```
+
+次にcontrollerにtoggle処理を追加していきましょう。
+
+```ruby:tasks_controller.rb
+...
+	def toggle
+		@task = Task.find(params[:id])
+		@task.done = !@task.done
+		@task.save
+	end
+...
+```
+
+routesも通ってるかコマンドで確認してみましょう。
+
+```sh:
+% rake routes                                                         [2:37:50]
+       Prefix Verb   URI Pattern                                      Controller#Action
+project_tasks POST   /projects/:project_id/tasks(.:format)            tasks#create
+ project_task DELETE /projects/:project_id/tasks/:id(.:format)        tasks#destroy
+     projects GET    /projects(.:format)                              projects#index
+              POST   /projects(.:format)                              projects#create
+  new_project GET    /projects/new(.:format)                          projects#new
+ edit_project GET    /projects/:id/edit(.:format)                     projects#edit
+      project GET    /projects/:id(.:format)                          projects#show
+              PATCH  /projects/:id(.:format)                          projects#update
+              PUT    /projects/:id(.:format)                          projects#update
+              DELETE /projects/:id(.:format)                          projects#destroy
+              POST   /projects/:project_id/tasks/:id/toggle(.:format) tasks#toggle
+         root GET    /                                                projects#index
+```
+
+最後の方にちゃんと通ってますね。
