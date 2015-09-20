@@ -826,3 +826,56 @@ project_tasks POST   /projects/:project_id/tasks(.:format)            tasks#crea
 ```
 
 最後の方にちゃんと通ってますね。
+
+
+##27 Tasksの状況を切り替えよう
+
+ちゃんと動くか確認していきましょう。  
+jsコンソールを表示してerrorメッセージが無いか確認していきます。
+
+```
+jquery.js?body=1:9632 POST http://0.0.0.0:3000/projects/xxx/tasks/xxx/toggle 404 (Not Found)
+```
+
+エラーが出ていますね。
+xxxの記述は修正したはずなので旧htmlのキャッシュがきいてるようです。再読み込みしましょう。
+
+```
+POST http://0.0.0.0:3000/projects/undefined/tasks/2/toggle 500 (Internal Server Error)
+```
+
+undifinedはおかしいので変数名エラーでした。  
+
+```erb:views/projects/show.html.erb
+...
+		<%= check_box_tag "", "", task.done, {"data-id" => task.id, "data-project_id" => task.project_id}%>
+...
+```
+
+htmlのdata-project-idを  
+data-project_idに変更しました。
+
+
+```
+POST http://0.0.0.0:3000/projects/1/tasks/2/toggle 500 (Internal Server Error)
+
+// error preview
+Missing template tasks/toggle, application/toggle with {:locale=>[:en], :formats=>[:html, :text, :js, :css, :ics, :csv, :png, :jpeg, :gif, :bmp, :tiff, :mpeg, :xml, :rss, :atom, :yaml, :multipart_form, :url_encoded_form, :json, :pdf, :zip], :handlers=>[:erb, :builder, :raw, :ruby, :jbuilder, :coffee]}. Searched in: * "/Users/uriu/Documents/dev/ruby/StudyOnRails4/taskapp/app/views"
+```
+
+templateが無いよと言われています。  
+ですが今回tottleを押しても画面が変わるわけではないのでtemplateを使わない設定にしていきましょう。
+
+```ruby:tasks_controller.rb
+...
+	def toggle
+		render nothing: true
+		@task = Task.find(params[:id])
+		@task.done = !@task.done
+		@task.save
+	end
+...
+```
+
+toggle頭に1行追加しました。  
+エラーはもう表示されなくなりました。
