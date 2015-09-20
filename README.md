@@ -604,7 +604,7 @@ routingは長くなりそうなので次回になります。
 modelの関連付けを忘れていたので設定していきます。  
 Taskに関しては  
 % rails g model Task title done:boolean project:references  
-のコマンドでapp/models/task.rubyにbelogn_toが記述されます。  
+のコマンドでapp/models/task.rbにbelogn_toが記述されます。  
 
 ```ruby:app/models/task.ruby
 class Task < ActiveRecord::Base
@@ -612,9 +612,9 @@ class Task < ActiveRecord::Base
 end
 ```
 
-しかし、app/models/project.rubyには関連付けがされていなので記述します。
+しかし、app/models/project.rbには関連付けがされていなので記述します。
 
-```ruby:app/models/project.ruby
+```ruby:app/models/project.rb
 class Project < ActiveRecord::Base
 	has_many :tasks,
 	validates :title,
@@ -625,7 +625,7 @@ end
 
 続いてroutingです。
 
-```ruby:config/routes.ruby
+```ruby:config/routes.rb
 ...
 #  resources :projects
   resources :projects do
@@ -680,3 +680,36 @@ project_tasksのcreateとdestroyの2行が追加されているはずです。
 次はsubmitボタンから実行されるcreateにactionを作成していきます。
 
 
+##23 Tasksを保存していこう
+
+taskの保存とvalidationをしていきましょう。  
+controllerの記述に入ります。  
+projects_controller.rbをコピーして作っていきます。
+
+```ruby:tasks_controller.rb
+class TasksController < ApplicationController
+
+	def create
+		@project = Project.find(params[:project_id])
+		@task = @project.tasks.create(task_params)
+		redirect_to project_path(@project.id)
+	end
+
+	private
+		def task_params
+			params[:task].permit(:title)
+		end
+
+end
+```
+
+空欄入力の拒否は必要ですよね。
+
+```ruby: app/models/task.rb
+class Task < ActiveRecord::Base
+	belongs_to :project
+	validates :title, presence: true
+end
+```
+
+これで完了になります。
