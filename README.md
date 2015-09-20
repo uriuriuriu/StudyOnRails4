@@ -713,3 +713,34 @@ end
 ```
 
 これで完了になります。
+
+
+##24 Tasksの削除をしてみよう
+
+まずはhtmlのdeleteリンクを他のページからコピーして編集していきましょう。
+
+```ruby:views/projects/show.html.erb
+...
+	<% @project.tasks.each do |task| %>
+	<li>
+		<%= task.title %>
+		<%= link_to "[delete]", project_task_path(task.project_id, task.id), method: :delete, data: {confirm:"消していいん？"} %>
+	</li>
+	<% end %>
+...
+```
+
+あとはroutesにあるようにdestroyメソッドを追加してきましょう。  
+こちらもprojects_controllerからコピー&編集していきます。
+
+```ruby:tasks_controller.rb
+...
+	def destroy
+		@task = Task.find(params[:id])
+		@task.destroy
+		redirect_to project_path(params[:project_id])
+	end
+...
+```
+
+redirectのproject_pathはコピーしたままだとprojects_pathになっており、project一覧ページに遷移してしまうので注意が必要です。
