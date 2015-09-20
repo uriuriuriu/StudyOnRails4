@@ -744,3 +744,23 @@ end
 ```
 
 redirectのproject_pathはコピーしたままだとprojects_pathになっており、project一覧ページに遷移してしまうので注意が必要です。
+
+
+##25 check_box_tagを使おう
+
+task管理なので各タスクにcheckboxを用意しましょう。
+
+```ruby:views/projects/show.html.erb
+...
+		<%= check_box_tag "", "", task.done, {"data-id" => task.id, "data-project-id" => task.project_id}%>
+...
+<script>
+$(function(){
+	$("input[type=checkbox]").click(function(){
+		$.post("/projects/xxx/tasks/xxx/toggle");
+	});
+})
+</script>
+```
+
+jsでajax通信をする予定です。
