@@ -653,3 +653,30 @@ project_tasks POST   /projects/:project_id/tasks(.:format)     tasks#create
          root GET    /                                         projects#index
 ```
 project_tasksのcreateとdestroyの2行が追加されているはずです。
+
+
+##22 Tasksの新規作成フォームを作ろう
+
+プロジェクト内にtaskを表示していきましょう。  
+具体的にはviews/projects/show.html.erbにformと一覧の作成になります。
+
+
+```ruby:views/projects/show.html.erb
+<h1><%= @project.title %></h1>
+
+<ul>
+	<% @project.tasks.each do |task| %>
+	<li><%= task.title %></li>
+	<% end %>
+	<li>
+		<%= form_for [@project, @project.tasks.build] do |f| %>
+		<%= f.text_field :title %>
+		<%= f.submit %>
+		<% end %>
+	</li>
+</ul>
+```
+
+次はsubmitボタンから実行されるcreateにactionを作成していきます。
+
+
