@@ -879,3 +879,35 @@ templateが無いよと言われています。
 
 toggle頭に1行追加しました。  
 エラーはもう表示されなくなりました。
+
+
+##28 Tasksの数を表示させよう
+
+総task数をindexに表示させましょう。
+
+```erb:index.html.erb
+...
+		<%= link_to project.title, project_path(project.id) %> (<%= project.tasks.count %>)
+...
+```
+
+次に残task数を表示させたいのですが、modelに定義してしまうと楽です。  
+scopeにunfinishedという定義をしておきましょう。
+
+```ruby:app/models/task.ruby
+class Task < ActiveRecord::Base
+	belongs_to :project
+	validates :title, presence: true
+	scope :unfinished, -> {where(done: false)}
+end
+```
+
+これでどこからでもunfinishedの呼び出しが可能となりました。
+
+```erb:index.html.erb
+...
+		<%= link_to project.title, project_path(project.id) %> (<%= project.tasks.unfinished.count %>/<%= project.tasks.count %>)
+...
+```
+
+以上になります。
